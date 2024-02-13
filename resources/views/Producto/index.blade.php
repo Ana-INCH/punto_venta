@@ -1,47 +1,85 @@
 @extends('layouts.app')
-@section('content')
-<div class="container">
-    <div class="row">
-        <h2>Crear un nuevo producto</h2>
-        <hr>
-        <form action="{{ route('productos.store') }}" method="post" enctype="multipart/form-data" class="col-lg-7">
-            @csrf
-            @if($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach($errors->all() as $error)
-                            <li>{{$error}}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
-            <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input type="text" class="form-control" id="nombre" name="nombre" value="{{ old('nombre') }}" />
+@section('template_title')
+    Producto
+@endsection
+
+@section('content')
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+
+                            <span id="card_title">
+                                {{ __('Producto') }}
+                            </span>
+
+                             <div class="float-right">
+                                <a href="{{ route('productos.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
+                                  {{ __('Create New') }}
+                                </a>
+                              </div>
+                        </div>
+                    </div>
+                    @if ($message = Session::get('success'))
+                        <div class="alert alert-success">
+                            <p>{{ $message }}</p>
+                        </div>
+                    @endif
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>No</th>
+                                        
+										<th>Id Producto</th>
+										<th>Id Categoria</th>
+										<th>Nombre</th>
+										<th>Descripcion</th>
+										<th>Precio Unitario</th>
+										<th>Imagen</th>
+										<th>Estatus</th>
+										<th>Existencia</th>
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($productos as $producto)
+                                        <tr>
+                                            <td>{{ ++$i }}</td>
+                                            
+											<td>{{ $producto->id_producto }}</td>
+											<td>{{ $producto->id_categoria }}</td>
+											<td>{{ $producto->nombre }}</td>
+											<td>{{ $producto->descripcion }}</td>
+											<td>{{ $producto->precio_unitario }}</td>
+											<td>{{ $producto->imagen }}</td>
+											<td>{{ $producto->estatus }}</td>
+											<td>{{ $producto->existencia }}</td>
+
+                                            <td>
+                                                <form action="{{ route('productos.destroy',$producto->id) }}" method="POST">
+                                                    <a class="btn btn-sm btn-primary " href="{{ route('productos.show',$producto->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
+                                                    <a class="btn btn-sm btn-success" href="{{ route('productos.edit',$producto->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                {!! $productos->links() !!}
             </div>
-            <div class="form-group">
-                <label for="descripcion">Descripción</label>
-                <textarea class="form-control" id="descripcion" name="descripcion">{{ old('descripcion') }}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="precio_unitario">Precio Unitario</label>
-                <input type="number" class="form-control" id="precio_unitario" name="precio_unitario" value="{{ old('precio_unitario') }}" />
-            </div>
-            <div class="form-group">
-            <label for="imagen">Imagen</label>
-<input type="file" name="imagen" id="imagen">
-            </div>
-            <div class="form-group">
-                <label for="estatus">Estatus</label>
-                <input type="text" class="form-control" id="estatus" name="estatus" value="{{ old('estatus') }}" />
-            </div>
-            <div class="form-group">
-                <label for="existencia">Existencia</label>
-                <input type="number" class="form-control" id="existencia" name="existencia" value="{{ old('existencia') }}" />
-            </div>
-            <button type="submit" class="btn btn-success">Guardar Producto</button>
-        </form>
+        </div>
     </div>
-</div>
 @endsection

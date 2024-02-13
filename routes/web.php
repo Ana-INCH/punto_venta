@@ -26,3 +26,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/productos', [ProductoController::class, 'index'])->name('productos.index');
 Route::get('/productos/create', [ProductoController::class, 'create'])->name('productos.create');
 Route::post('/productos', [ProductoController::class, 'store'])->name('productos.store');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::delete('/productos/{id}', 'ProductoController@destroy')->name('productos.destroy');
+
+Route::resource('Producto', ProductoController::class);
